@@ -1,0 +1,171 @@
+<%
+function commaSeparateNumber(val){
+	while (/(\d+)(\d{3})/.test(val.toString())){
+    	val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+	}
+	return val;
+}
+
+%>
+
+<div class="intro-section">
+	<div class="container">
+		<h1 class="text-center"> Hidden Infected </h1>
+		<h4 class="text-center"> Where trust gets you killed</h4>
+	</div>
+</div>
+<div class="container">
+<div class="row">
+	<div class="col-md-5">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="">Leaderboards</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="text-center">Rank</th>
+							<th class="text-center">Name</th>
+							<th class="text-center">Points</th>
+						</tr>
+					</thead>
+					<tbody class="text-center">
+						<% var i = 1 %>
+						<% playerList.forEach(function(player) {%>
+						<tr>
+							<td><%= i %></td>
+							<% i++ %>
+							<td><a href="/player/<%= player.steam_id %>"> <%= player.last_name %> </a></td>
+							<td><%= commaSeparateNumber(player.points) %></td>
+							</tr>
+						<% }); %>
+					</tbody>
+				</table> 
+			</div>
+			<div class="panel-footer">
+				<button type="button" class="btn btn-primary btn-lg btn-block">Got to statistics</button>
+			</div>
+		</div>
+		
+	</div>
+	<div class="col-md-7">
+		<h3>
+			Current game
+		</h3>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Chat
+				</h3>
+			</div>
+			<div class="panel-body">
+				(10:30:25) Azure : le lool <br>
+				(10:30:54) HonorCode : KOS riv <br>
+			</div>
+		</div> 
+		<button type="button" class="btn btn-primary btn-default pull-right">
+			Connect
+		</button>
+	</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+	<div class="col-md-12">
+		<h1 class="what-is-header">What is hidden infected? </h1>
+		<p class="what-is-body">
+			Hidden Infected is a port of the <b>Trouble In Terrorist</b> mod from the game <b>Garry's mod</b>. The mod takes place on a fortress built by survivors that is able to keep the Infected away and allow them to live peacefully for the years to come. <br><br>
+
+			The Infected, however, have managed to infiltrate the fortress and disguise as a normal human to deveice the survivors. With their lies and silent murders, the Infected must kill each one of the humans that live in the fortress.
+			<br> <br>
+
+			Will the survivors be able to find out who is Infected before it is too late? <br><br>
+		</p>
+</div>
+<div class="row">
+	<div class="home-explanation">
+		<div class="col-md-4">
+			<img src="http://lorempixel.com/400/200" />
+		</div>
+		<div class="col-md-8">
+			<h2>Distrust and confusion</h2>
+			<p>Trust nobody. Not even your best friend! The Infected are inside and will use the cheapest trick to cut you into pieces!</p>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="home-explanation">
+		<div class="col-md-8">
+			<h2>Strategy</h2>
+			<p>As Infected plan a way to murder silently and to be as sneeky as possible. There's too many of them and together they can bring you down in seconds!</p>
+		</div>
+		<div class="col-md-4">
+			<img src="http://lorempixel.com/400/200" />
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="home-explanation">
+		<div class="col-md-4">
+			<img src="http://lorempixel.com/400/200" />
+		</div>
+		<div class="col-md-8">
+			<h2>Fun!</h2>
+			<p>Come join us in one of the funniest mods available for L4D2. Don't be shy and bring a microphone to have a great time with us! We are all friendly and ready to help people willing to learn how to play!</p>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="thumbnail">
+					<img alt="Bootstrap Thumbnail First" src="http://lorempixel.com/output/people-q-c-600-200-1.jpg">
+					<div class="caption">
+						<h3>Learn about the mod</h3>
+						<p>
+							Learn the basic aspects of the mod to get you started on your attempts to survive... or murder...
+						</p>
+						<p>
+							<a class="btn btn-default" href="#">Full Guide</a> <a class="btn btn-primary" href="#">Video</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="thumbnail">
+					<img alt="Bootstrap Thumbnail Second" src="http://lorempixel.com/output/city-q-c-600-200-1.jpg">
+					<div class="caption">
+						<h3>
+							Read the rules of the mod
+						</h3>
+						<p>
+							Read the rules that make the mod as fun as it is! Breaking these rules may get you expelled from our servers, so it is always good to give them a deep read to keep yourself informed.
+						</p>
+						<p>
+							<a class="btn btn-default" href="#">Full Guide</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="thumbnail">
+					<img alt="Bootstrap Thumbnail Third" src="http://lorempixel.com/output/sports-q-c-600-200-1.jpg">
+					<div class="caption">
+						<h3>
+							Learn more about items
+						</h3>
+						<p>
+							Learn about the special equipment that certain roles have access to. After this,	 you will know when and how to use each of the items to destroy your enemies!
+						</p>
+						<p>
+							<a class="btn btn-default" href="#">Full Guide</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

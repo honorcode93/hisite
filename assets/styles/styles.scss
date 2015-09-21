@@ -1,0 +1,48 @@
+.intro-section{
+	padding-top: 80px;
+	margin-bottom: 20px;
+	height: 300px;
+	background-color: #BA3434;
+	color: white;
+	background-image: url("../images/invert.jpg");
+}
+
+h3{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.navbar{
+	margin-bottom: 0px;
+	border-radius: 0px;
+}
+
+.with-margin-top{
+	margin-top: 20px;
+}
+
+
+.player-stats-section{
+	height: 300px;
+}
+
+.what-is-header{
+	font-size: 75px;
+	text-align: center;
+}
+
+.what-is-body{
+	font-size: 20px;
+	text-align: justify;
+}
+
+.win-rate{
+	.progress{
+		background-color: #128415;
+		height: 30px;
+	}
+
+	.progress-bar{
+		background-color: #C43434;
+	}
+}
