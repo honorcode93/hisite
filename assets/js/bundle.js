@@ -19602,6 +19602,522 @@ module.exports = require('./lib/React');
 /**
  * @jsx React.DOM
  */
+'use strict';   
+var React = require('react');
+
+// Generic Countdown Timer UI component
+//
+// https://github.com/uken/react-countdown-timer
+//
+// props:
+//   - initialTimeRemaining: Number
+//       The time remaining for the countdown (in ms).
+//
+//   - interval: Number (optional -- default: 1000ms)
+//       The time between timer ticks (in ms).
+//
+//   - formatFunc(timeRemaining): Function (optional)
+//       A function that formats the timeRemaining.
+//
+//   - tickCallback(timeRemaining): Function (optional)
+//       A function to call each tick.
+//
+//   - completeCallback(): Function (optional)
+//       A function to call when the countdown completes.
+//
+var CountdownTimer = React.createClass({
+  displayName: 'CountdownTimer',
+
+  propTypes: {
+    initialTimeRemaining: React.PropTypes.number.isRequired,
+    interval: React.PropTypes.number,
+    formatFunc: React.PropTypes.func,
+    tickCallback: React.PropTypes.func,
+    completeCallback: React.PropTypes.func
+  },
+
+  getDefaultProps: function() {
+    return {
+      interval: 1000,
+      formatFunc: null,
+      tickCallback: null,
+      completeCallback: null
+    };
+  },
+
+  getInitialState: function() {
+    // Normally an anti-pattern to use this.props in getInitialState,
+    // but these are all initializations (not an anti-pattern).
+    return {
+      timeRemaining: this.props.initialTimeRemaining,
+      timeoutId: null,
+      prevTime: null
+    };
+  },
+
+  componentDidMount: function() {
+    this.tick();
+  },
+
+  componentWillReceiveProps: function(newProps) {
+    if (this.state.timeoutId) { clearTimeout(this.state.timeoutId); }
+    this.setState({prevTime: null, timeRemaining: newProps.initialTimeRemaining});
+  },
+
+  componentDidUpdate: function() {
+    if ((!this.state.prevTime) && this.state.timeRemaining > 0 && this.isMounted()) {
+      this.tick();
+    }
+  },
+
+  componentWillUnmount: function() {
+    clearTimeout(this.state.timeoutId);
+  },
+
+  tick: function() {
+    var currentTime = Date.now();
+    var dt = this.state.prevTime ? (currentTime - this.state.prevTime) : 0;
+    var interval = this.props.interval;
+
+    // correct for small variations in actual timeout time
+    var timeRemainingInInterval = (interval - (dt % interval));
+    var timeout = timeRemainingInInterval;
+
+    if (timeRemainingInInterval < (interval / 2.0)) {
+      timeout += interval;
+    }
+
+    var timeRemaining = Math.max(this.state.timeRemaining - dt, 0);
+    var countdownComplete = (this.state.prevTime && timeRemaining <= 0);
+
+    if (this.isMounted()) {
+      if (this.state.timeoutId) { clearTimeout(this.state.timeoutId); }
+      this.setState({
+        timeoutId: countdownComplete ? null : setTimeout(this.tick, timeout),
+        prevTime: currentTime,
+        timeRemaining: timeRemaining
+      });
+    }
+
+    if (countdownComplete) {
+      if (this.props.completeCallback) { this.props.completeCallback(); }
+      return;
+    }
+
+    if (this.props.tickCallback) {
+      this.props.tickCallback(timeRemaining);
+    }
+  },
+
+  getFormattedTime: function(milliseconds) {
+    if (this.props.formatFunc) {
+      return this.props.formatFunc(milliseconds);
+    }
+
+    var totalSeconds = Math.round(milliseconds / 1000);
+
+    var seconds = parseInt(totalSeconds % 60, 10);
+    var minutes = parseInt(totalSeconds / 60, 10) % 60;
+    var hours = parseInt(totalSeconds / 3600, 10);
+
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    hours = hours < 10 ? '0' + hours : hours;
+
+    return hours + ':' + minutes + ':' + seconds;
+  },
+
+  render: function() {
+    var timeRemaining = this.state.timeRemaining;
+
+    return (
+      React.createElement("div", {className: "timer"}, 
+        this.getFormattedTime(timeRemaining)
+      )
+    );
+  }
+});
+
+module.exports = CountdownTimer;
+
+},{"react":155}],157:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';
+var React = require('react');
+var CurrentGamePlayerList = require('./current_game_player_list');
+var CurrentGameChat = require('./current_game_chat');
+
+var CurrentGame = React.createClass({displayName: "CurrentGame",
+	getInitialState: function(){
+		return {
+			
+			serverState: null,
+			chatMessages : [],
+			playerList : [],
+			timeLeft : 0,
+			timingOut : false
+			
+			/*
+
+			serverState: {
+					round_stage_id : 3,
+					round_stage : "In Progress",
+					time_left : 60,
+					winner : 0,
+					map: "c1m1_hotel",
+					current_round: 1,
+					total_rounds: 5
+	    	},
+	    	chatMessages:[
+	    		{time:'10:30:25', name:'Azure', content:'le lool'},
+				{time:'10:30:54', name:'HonorCode', content:'c:'},
+				{time:'10:31:25', name:'Jordan', content:'Are you serious'},
+				{time:'10:31:55', name:'Kar', content:'KOSMARVLL'},
+				{time:'10:31:55', name:'Marvel', content:'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'},
+				{time:'10:32:32', name:'Jost', content:'lol'},
+				{time:'10:32:33', name:'Marvel', content:'lol'},
+				{time:'10:33:36', name:'HonorCode', content:'zzzzz'},
+				{time:'10:33:40', name:'Rivion', content:'rekt'}
+	    	],
+			playerList : [
+					{name:"HonorCode", team:"infected", state:'player-dead'},
+					{name:"Marvel", team:"detective", state:'player-dead'},
+					{name:"Jost", team:"infected", state:'player-alive'},
+					{name:"Rivion", team:"detective", state:'player-alive'},
+					{name:"Nikki", team:"infected", state:'player-alive'},
+					{name:"Stefeman", team:"unknown", state:'player-alive'},
+					{name:"Kitties", team:"unknown", state:'player-dead'},
+					{name:"kevin", team:"unknown", state:'player-dead'},
+					{name:"poop", team:"unknown", state:'player-alive'},
+					{name:"Azure", team:"unknown", state:'player-alive'},
+					{name:"Bazure", team:"infected", state:'player-alive'},
+					{name:"PsychoKitty", team:"unknown", state:'player-alive'}
+			],
+			
+			timeLeft: 30,
+			timingOut: false
+			*/
+
+		};
+	},
+	componentDidMount: function(){
+		io.socket.get('/listen/hiserver', function(data){
+			console.log("Listening to HI server.");
+		});
+
+		io.socket.on('chat-message', this.onChatMsg);
+		io.socket.on('server-state', this.onServerState);
+
+		io.socket.on('player-list', this.onPlayerList);
+		setTimeout(this.timerTick, 1000);
+	},
+	timerTick: function(){
+		if(!this.isMounted()){
+			setTimeout(this.timerTick, 1000);
+			return;
+		}
+
+		if(this.state === undefined || this.state.serverState === null){
+			setTimeout(this.timerTick, 1000);
+			return;
+		}
+		var time = this.state.timeLeft;
+		var timingOut = this.state.timingOut;
+		time -= 1;
+		if(time == 0){
+			if(!timingOut){
+				time = 5;
+				timingOut = true;
+			}
+			else{
+				this.state.serverState = null;
+				time = 0;
+			}
+		}
+		if(time < 0){
+			time = 0;
+		}
+
+		var state = this.state;
+		this.setState({
+			serverState: state.serverState, 
+			chatMessages: state.chatMessages,
+			playerList: state.playerList,
+			timeLeft : time,
+			timingOut: timingOut
+		});
+		setTimeout(this.timerTick, 1000);
+	},
+	onChatMsg: function(data){
+		console.log(data);
+		var messages = this.state.chatMessages;
+		messages.push(data);
+		this.setState({
+			serverState: this.state.serverState, 
+			chatMessages: messages,
+			playerList: this.state.playerList,
+			timeLeft : this.state.timeLeft,
+			timingOut: this.state.timingOut
+		});
+	},
+	onServerState: function(data){
+		console.log(data);
+		var state = this.state;
+		var timeLeft = this.state.timeLeft;
+
+		if(timeLeft == 0 || this.state.serverState.round_stage_id != data.round_stage_id)
+			timeLeft = data.time_left;
+
+
+		this.setState({
+			serverState: data, 
+			chatMessages: state.chatMessages,
+			playerList: state.playerList,
+			timeLeft : timeLeft,
+			timingOut: false,
+		});
+	},
+	onPlayerList: function(data){
+		console.log(data);
+		var state = this.state;
+		this.setState({
+			serverState: state.serverState, 
+			chatMessages: state.chatMessages,
+			playerList: data.players,
+			timeLeft : state.timeLeft,
+			timingOut: false,
+		});
+
+	},
+
+
+	convertTime: function(timeSec){
+		var minutes = Math.floor(timeSec / 60);
+		var seconds = timeSec - minutes*60;
+
+		var sMinutes = ""
+		var sSeconds = ""
+
+		if(minutes < 10){
+			sMinutes = "0"+minutes.toString();
+		}
+		else{
+			sMinutes = minutes.toString();
+		}
+
+		if(seconds < 10){
+			sSeconds = "0"+seconds.toString();
+		}
+		else{
+			sSeconds = seconds.toString();
+		}
+
+		return sMinutes+":"+sSeconds;
+
+	},
+
+	render: function(){
+		if(this.state.serverState === null){
+			return (
+				React.createElement("div", {className: "current-game"}, 
+				React.createElement("h1", {className: "server-offline"}, "OFFLINE")
+				)
+			)
+		}
+		var state = this.state.serverState;
+		var time = this.convertTime(this.state.timeLeft);
+		if(this.state.timingOut)
+			time = "00:00";
+		return (
+			React.createElement("div", {className: "current-game"}, 
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-md-2"}), 
+					React.createElement("div", {className: "col-md-8 text-center"}, 
+						React.createElement("h2", null, state.round_stage), 
+						React.createElement("small", null, "Round ", state.current_round, "/", state.total_rounds, " "), 
+						React.createElement("h1", null, time)
+					), 
+					React.createElement("div", {className: "col-md-2"})
+				), 
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-md-1"}, " "), 
+					React.createElement("div", {className: "col-md-10"}, 
+						React.createElement("button", {type: "button", className: "btn btn-block btn-default pull-right", "data-toggle": "collapse", "data-target": "#playerList", "aria-expanded": "false", "aria-controls": "playerList"}, 
+							React.createElement("b", null, "Player List")
+						), 
+						React.createElement("div", {className: "collapse", id: "playerList"}, 
+							React.createElement(CurrentGamePlayerList, {playerList: this.state.playerList})
+						)
+					), 
+					React.createElement("div", {className: "col-md-1"}, " ")
+				), 
+
+				React.createElement("div", {className: "row"}, 
+				React.createElement("div", {className: "col-md-12"}, 
+					React.createElement("div", {className: "panel panel-default chat"}, 
+						React.createElement("div", {className: "panel-heading"}, 
+							"Chat"
+						), 
+						React.createElement("div", {className: "panel-body", id: "chat"}, 
+							React.createElement(CurrentGameChat, {messages: this.state.chatMessages})
+						)
+					)
+				)
+				), 
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-md-8"}), 
+					React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("button", {type: "button", className: "btn btn-primary btn-default pull-right"}, 
+							"Connect"
+						)
+					)
+				)
+			)
+		)
+	}
+})
+
+if(document.getElementById('homepage-current-game')){
+	React.render(React.createElement(CurrentGame, null), document.getElementById('homepage-current-game'));
+}
+},{"./current_game_chat":158,"./current_game_player_list":159,"react":155}],158:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';
+var React = require('react');
+
+var CurrentGameChat = React.createClass({displayName: "CurrentGameChat",
+	render: function(){
+
+		var msgs = this.props.messages.map(function(m, index){
+			return (
+					React.createElement("li", null, "(", m.time, ") ", m.name, " : ", m.content)
+				)
+		});
+		return (
+			React.createElement("ul", {className: "chat-message-list"}, 
+				msgs
+			)
+		)
+	}
+});
+
+module.exports = CurrentGameChat;
+
+
+},{"react":155}],159:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';
+var React = require('react');
+
+var CurrentGamePlayerList = React.createClass({displayName: "CurrentGamePlayerList",
+	render: function(){
+		console.log(this.props.playerList);
+		var players = this.props.playerList;
+
+		if(players === undefined || players === null || players.length <= 0){
+			return (
+					React.createElement("table", {className: "table table-bordered table-condensed text-center player-list"}
+					)
+			)
+		}
+
+		var list = players.map(function(p, index){
+			return (
+				React.createElement("tr", {key: index}, 
+					React.createElement("td", {className: p.team+" "+p.state}, p.name)
+				)
+			)
+		});
+		return (
+			React.createElement("table", {className: "table table-bordered table-condensed text-center player-list"}, 
+				React.createElement("tbody", null, 
+					list
+				)
+			)
+		)
+	}
+});
+
+module.exports = CurrentGamePlayerList;
+},{"react":155}],160:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';
+var React = require('react');
+
+var PlayerRanking = React.createClass({displayName: "PlayerRanking",
+	getInitialState: function(){
+		return {
+			info:[]
+		};
+	},
+	componentDidMount: function(){
+		$.get("/getTop10", function(result) {
+			console.log(this.state.info);
+			this.setState({info: result});
+	    }.bind(this));
+	},
+	render: function() {
+		var players = this.state.info.map(function (p, key) {
+			var k = key + 1;
+			return (
+				React.createElement("tr", {key: key}, 
+					React.createElement("td", null, k), 
+					React.createElement("td", null, React.createElement("a", {href: "/player/"+p.steam_id}, p.last_name)), 
+					React.createElement("td", null, p.points)
+				)
+			)
+		});
+		
+		if(players.length < 10)
+		{
+			for(var n = players.length; n < 10; n++){
+				players.push(
+						(
+							React.createElement("tr", {key: n}, 
+								React.createElement("td", null, n+1), 
+								React.createElement("td", null, "-"), 
+								React.createElement("td", null, "-")
+							)
+						)
+					);
+			}
+		}
+	
+		return (
+			React.createElement("table", {className: "table table-condensed"}, 
+				React.createElement("thead", null, 
+					React.createElement("tr", null, 
+						React.createElement("th", {className: "text-center"}, "Rank"), 
+						React.createElement("th", {className: "text-center"}, "Name"), 
+						React.createElement("th", {className: "text-center"}, "Points")
+					)
+				), 
+				React.createElement("tbody", {className: "text-center"}, 
+					players
+				)
+			) 
+		);
+	}
+});
+if(document.getElementById('homepage-player-ranking')){
+	React.render(React.createElement(PlayerRanking, null), document.getElementById('homepage-player-ranking'));
+}
+},{"react":155}],161:[function(require,module,exports){
+
+},{}],162:[function(require,module,exports){
+arguments[4][161][0].apply(exports,arguments)
+},{"dup":161}],163:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
 'use strict';
 
 var React = require('react');
@@ -19617,10 +20133,10 @@ var PlayerInfo = React.createClass({displayName: "PlayerInfo",
 	render: function(){
 		return (
 			React.createElement("div", {className: "row"}, 
-				React.createElement("div", {className: "col-md-3"}, 
+				React.createElement("div", {className: "col-md-4"}, 
 					React.createElement(PlayerMainInfo, {source: "/getPlayer/", steam_id: this.state.steam_id})
 				), 
-				React.createElement("div", {className: "col-md-9"}, 
+				React.createElement("div", {className: "col-md-8"}, 
 					React.createElement("div", {className: "panel panel-default"}, 
 						React.createElement("div", {className: "panel-heading"}, 
 							React.createElement("h1", {className: "panel-title"}, 
@@ -19723,11 +20239,7 @@ if(document.getElementById('player-info-app')){
 		</div>
 	</div>
 */
-},{"./player_main_info":159,"./player_survivor_stats":160,"react":155}],157:[function(require,module,exports){
-
-},{}],158:[function(require,module,exports){
-arguments[4][157][0].apply(exports,arguments)
-},{"dup":157}],159:[function(require,module,exports){
+},{"./player_main_info":164,"./player_survivor_stats":165,"react":155}],164:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -19783,7 +20295,7 @@ var PlayerMainInfo = React.createClass({displayName: "PlayerMainInfo",
 });
 
 module.exports = PlayerMainInfo;
-},{"react":155}],160:[function(require,module,exports){
+},{"react":155}],165:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -19831,19 +20343,19 @@ var PlayerSurvStats = React.createClass({displayName: "PlayerSurvStats",
 
 		return(
 			React.createElement("div", {className: "tab-pane active", id: "panel-1"}, 
-				React.createElement("ul", {className: "stat-list"}, 
-					React.createElement("li", null, "Points earned as a survivor: ", this.state.info.surv_points), 
-					React.createElement("li", null, "Total kills: ", this.state.info.surv_kills), 
-					React.createElement("li", null, "Total headshot kills: ", this.state.info.surv_headshots), 
-					React.createElement("li", null, "Max kill streak (same round): ", this.state.info.surv_kill_streak), 
-					React.createElement("li", null, "Total deaths: ", this.state.info.surv_deaths), 
-					React.createElement("li", null, "Total suicides: ", this.state.info.surv_suicides), 
-					React.createElement("li", null, "Total teamkills: ", this.state.info.surv_teamkills), 
-					React.createElement("li", null, "Minimum alive time: ", this.state.info.surv_min_alive_time), 
-					React.createElement("li", null, "Rounds Won: ", this.state.info.surv_rounds_won, " (0.0%) "), 
-					React.createElement("li", null, "Most damage taken: ", this.state.info.surv_most_damage_taken), 
-					React.createElement("li", null, "Most damage dealt: ", this.state.info.surv_most_damage_dealt), 
-					React.createElement("li", null, "Total hunters shoved: ", this.state.info.surv_hunters_shoved)
+				React.createElement("table", {className: "table"}, 
+					React.createElement("tr", null, React.createElement("th", null, "Points earned as a survivor:"), React.createElement("td", null, " ", this.state.info.surv_points)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total kills:"), React.createElement("td", null, " ", this.state.info.surv_kills)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total headshot kills:"), React.createElement("td", null, " ", this.state.info.surv_headshots)), 
+					React.createElement("tr", null, React.createElement("th", null, "Max kill streak (same round):"), React.createElement("td", null, " ", this.state.info.surv_kill_streak)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total deaths:"), React.createElement("td", null, " ", this.state.info.surv_deaths)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total suicides:"), React.createElement("td", null, " ", this.state.info.surv_suicides)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total teamkills:"), React.createElement("td", null, " ", this.state.info.surv_teamkills)), 
+					React.createElement("tr", null, React.createElement("th", null, "Minimum alive time:"), React.createElement("td", null, " ", this.state.info.surv_min_alive_time)), 
+					React.createElement("tr", null, React.createElement("th", null, "Rounds Won:"), React.createElement("td", null, " ", this.state.info.surv_rounds_won, " (0.0%)")), 
+					React.createElement("tr", null, React.createElement("th", null, "Most damage taken:"), React.createElement("td", null, " ", this.state.info.surv_most_damage_taken)), 
+					React.createElement("tr", null, React.createElement("th", null, "Most damage dealt:"), React.createElement("td", null, " ", this.state.info.surv_most_damage_dealt)), 
+					React.createElement("tr", null, React.createElement("th", null, "Total hunters shoved:"), React.createElement("td", null, " ", this.state.info.surv_hunters_shoved))
 				)
 			)
 		);
@@ -19851,4 +20363,257 @@ var PlayerSurvStats = React.createClass({displayName: "PlayerSurvStats",
 });
 
 module.exports = PlayerSurvStats;
-},{"react":155}]},{},[156,157,158,159,160]);
+},{"react":155}],166:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';   
+var React = require('react');
+var PlayerList = React.createClass({displayName: "PlayerList",
+	
+	render:function(){
+		var page = this.props.page;
+		var players = this.props.playerList.map(function(p, index){
+			return (
+				React.createElement("tr", {key: index}, 
+					React.createElement("td", null, index+1+20*(page-1)), 
+					React.createElement("td", null, React.createElement("a", {href: p.steam_id}), p.last_name), 
+					React.createElement("td", null, p.points), 
+					React.createElement("td", null, p.karma), 
+					React.createElement("td", null, p.last_active)
+				)
+			)
+		});
+
+		return (
+			React.createElement("table", {className: "table table-condensed"}, 
+				React.createElement("thead", null, 
+					React.createElement("tr", null, 
+						React.createElement("th", null, 
+							"Rank"
+						), 
+						React.createElement("th", null, 
+							"Last seen name"
+						), 
+						React.createElement("th", null, 
+							"Points"
+						), 
+						React.createElement("th", null, 
+							"Karma"
+						), 
+						React.createElement("th", null, 
+							"Last Active"
+						)
+					)
+				), 
+				React.createElement("tbody", null, 
+					players
+				)
+			)
+		)
+	}
+});
+
+module.exports = PlayerList;
+},{"react":155}],167:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+'use strict';   
+var React = require('react');
+var PlayerList = require('./player_list');
+
+var Ranking = React.createClass({displayName: "Ranking",
+	getInitialState:function(){
+		return {
+			playerList: [],
+			pages:[
+				{page:1, current:true},
+				{page:2, current:false},
+				{page:3, current:false},
+				{page:4, current:false},
+				{page:5, current:false}
+			]
+		}
+	},
+	componentDidMount: function(){
+		$.get('/getPlayerRanking/1', function(result) {
+			this.setState({
+				playerList: result,
+				page: this.state.pages
+			});
+			console.log(result);
+	    }.bind(this));
+	},
+	onPageNumberClicked:function(page){
+		var clicked = page;
+		var pages = this.state.pages;
+		$.get('/getPlayerRanking/'+page, function(result) {
+			for(var i = 0; i < pages.length; i++){
+				pages[i].current = false;
+			}
+			if(page <= 0)
+				return;
+			if(page <= 2){
+				for(var i = 0; i < pages.length; i++){
+					pages[i].page = page-(page-1-i);
+				}
+				pages[page-1].current = true;
+			}
+			if(page >= 3){
+				for(var i = 0; i < pages.length; i++){
+					pages[i].page = page-(2-i);
+				}
+				pages[2].current = true;
+			}
+
+			this.setState({
+				playerList: result,
+				pages: pages
+			});		
+		}.bind(this));
+
+	},
+	onPrevClicked: function(event){
+		var pages = this.state.pages;
+
+		if(pages[0].current && pages[0].page == 1)
+			return;
+
+		var currPage;
+		for(var i = 0; i < this.state.pages.length; i++){
+			if(this.state.pages[i].current){
+				currPage = this.state.pages[i].page
+				break;
+			}
+		}
+		var prev = currPage-1;
+		$.get('/getPlayerRanking/'+prev, function(result) {
+			if(currPage > 3){
+				for(var i = 0; i < pages.length; i++){
+					pages[i].page = pages[i].page - 1;
+				}
+			}
+			else{
+				pages[currPage-1].current = false;
+				pages[currPage-2].current = true;
+			}
+			this.setState({
+				playerList: result,
+				pages: pages
+			});
+		}.bind(this));
+
+	},
+	onNextClicked: function(event){
+		var pages = this.state.pages;
+		var currPage;
+		for(var i = 0; i < this.state.pages.length; i++){
+			if(this.state.pages[i].current){
+				currPage = this.state.pages[i].page
+				break;
+			}
+		}
+		var next = currPage+1
+		$.get('/getPlayerRanking/'+next, function(result) {
+			if(currPage >= 3){
+				for(var i = 0; i < pages.length; i++){
+					pages[i].page = pages[i].page + 1;
+				}
+			}
+			else{
+				pages[currPage].current = true;
+				pages[currPage-1].current = false;
+			}
+			this.setState({
+				playerList: result,
+				pages: pages
+			});
+		}.bind(this));
+	},
+	render:function(){
+		var currPage;
+		for(var i = 0; i < this.state.pages.length; i++){
+			if(this.state.pages[i].current){
+				currPage = this.state.pages[i].page
+				break;
+			}
+		}
+		var thisHack = this;
+		var pages = this.state.pages.map(function(p, index){
+			if(p.current){
+				return (
+						React.createElement("li", {className: "active", key: index}, 
+							React.createElement("a", null, p.page)
+						)
+				)
+			}
+			else{
+				return (
+						React.createElement("li", {key: index}, 
+							React.createElement("a", {onClick: thisHack.onPageNumberClicked.bind(null, p.page)}, p.page)
+						)
+				)
+			}
+		});
+
+		var prev;
+		if(this.state.pages[0].current && this.state.pages[0].page == 1){
+			prev = (React.createElement("li", {className: "disabled"}, 
+						React.createElement("a", null, "Prev")
+					))
+		}
+		else{
+			prev = (React.createElement("li", null, 
+						React.createElement("a", {onClick: this.onPrevClicked}, "Prev")
+				))
+		}
+		return (
+			React.createElement("div", null, 
+				React.createElement("div", {className: "panel-heading"}, 
+					React.createElement("h3", {className: "panel-title"}, 
+						React.createElement("b", null, "Player Ranking")
+					)
+				), 
+				React.createElement("div", {className: "panel-body"}, 
+					React.createElement("div", null, 
+						React.createElement(PlayerList, {playerList: this.state.playerList, page: currPage})
+					), 
+					React.createElement("form", {role: "form", action: "player/search", method: "post"}, 
+						React.createElement("div", {className: "form-group form-inline"}, 
+							React.createElement("label", {htmlFor: "searchForPlayer"}, 
+								"Search player:" 
+							), 
+							React.createElement("input", {name: "data", type: "text", className: "form-control", id: "searchForPlayer"}), 
+							React.createElement("button", {type: "submit", className: "btn btn-primary"}, 
+								"Find"
+							)
+						)				
+					)
+				), 
+				React.createElement("div", {className: "panel-footer"}, 
+					React.createElement("div", {className: "row"}, 
+						React.createElement("div", {className: "col-md-3"}
+						), 
+						React.createElement("div", {className: "col-md-6"}, 
+							React.createElement("ul", {className: "pagination"}, 
+								prev, 
+								pages, 
+								React.createElement("li", null, 
+									React.createElement("a", {onClick: this.onNextClicked}, "Next")
+								)
+							)
+						), 
+						React.createElement("div", {className: "col-md-3"}
+						)
+					)
+				)
+			)
+		)
+	}
+});
+
+if(document.getElementById('stats-ranking')){
+	React.render(React.createElement(Ranking, null), document.getElementById('stats-ranking'));
+}
+},{"./player_list":166,"react":155}]},{},[156,157,158,159,160,161,162,163,164,165,166,167]);

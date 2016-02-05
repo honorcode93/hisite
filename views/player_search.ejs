@@ -1,0 +1,99 @@
+<%
+	console.log(result);
+%>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h2>
+					Search results
+				</h2>
+			</div>
+			<div class="alert alert-info alert-dismissable alert-player-search">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+				<h4><b>Info</b></h4>
+				<% if(guess){ %>
+					Assuming you are searching by player <b><%= type %></b>.<br>
+				<% }%>
+				Showing up to a maximum of<b> 50 </b>results.
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<form role="form" action="/player/search" method="post">
+						<div class="form-group form-inline">
+							<label for="searchForPlayer">
+								Search again:
+							</label>
+							<input name="data" type="text" class="form-control" id="searchForPlayer" required/>
+							<select name="dataType" class="form-control">
+								<option>Guess input</option>
+								<option>Find by name</option>
+								<option>Find by Steam ID</option>
+							</select>
+							<button type="submit" class="btn btn-primary">
+								Find
+							</button>
+							
+						</div>		
+					</form>
+				</div>
+				<div class="col-md-6">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1">
+				</div>
+				<div class="col-md-10">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3>Results</h3>
+						</div>
+						<div class="panel-body">
+							<% if(typeof result !== 'undefined' && result.length > 0){ %>
+							<table class="table">
+							<thead>
+								<tr>
+									<th>
+										Rank
+									</th>
+									<th>
+										Last seen name
+									</th>
+									<th>
+										Points
+									</th>
+									<th>
+										Karma
+									</th>
+									<th>
+										Last Active
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% for(var i = 0; i < result.length; i++){ %>
+									<tr>
+										<td><%= result[i].rank %></td>
+										<td><a href="/player/<%= result[i].steam_id%>"><%= result[i].last_name %> </a></td>
+										<td><%= result[i].points %></td>
+										<td><%= result[i].karma %></td>
+										<td><%= result[i].last_active %></td>
+									</tr>
+								<% }%>
+							
+							</tbody>
+							</table>
+							<% }else{ %>
+								<h1 class="text-center"> No results </h1>
+							<%}%>
+						</div>
+					</div>
+				</div>
+					
+				<div class="col-md-1">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

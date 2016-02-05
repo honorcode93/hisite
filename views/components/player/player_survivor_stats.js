@@ -45,20 +45,20 @@ var PlayerSurvStats = React.createClass({
 
 		return(
 			<div className="tab-pane active" id="panel-1">
-				<ul className="stat-list">
-					<li>Points earned as a survivor: {this.state.info.surv_points}</li>
-					<li>Total kills: {this.state.info.surv_kills}</li>
-					<li>Total headshot kills: {this.state.info.surv_headshots}</li>
-					<li>Max kill streak (same round): {this.state.info.surv_kill_streak}</li>
-					<li>Total deaths: {this.state.info.surv_deaths}</li>
-					<li>Total suicides: {this.state.info.surv_suicides}</li>
-					<li>Total teamkills: {this.state.info.surv_teamkills}</li>
-					<li>Minimum alive time: {this.state.info.surv_min_alive_time}</li>
-					<li>Rounds Won: {this.state.info.surv_rounds_won} (0.0%) </li>
-					<li>Most damage taken: {this.state.info.surv_most_damage_taken}</li>
-					<li>Most damage dealt: {this.state.info.surv_most_damage_dealt}</li>
-					<li>Total hunters shoved: {this.state.info.surv_hunters_shoved}</li>
-				</ul>
+				<table className="table">
+					<tr><th>Points earned as a survivor:</th><td> {this.state.info.surv_points}</td></tr>
+					<tr><th>Total kills:</th><td> {this.state.info.surv_kills}</td></tr>
+					<tr><th>Total headshot kills:</th><td> {this.state.info.surv_headshots}</td></tr>
+					<tr><th>Max kill streak (same round):</th><td> {this.state.info.surv_kill_streak}</td></tr>
+					<tr><th>Total deaths:</th><td> {this.state.info.surv_deaths}</td></tr>
+					<tr><th>Total suicides:</th><td> {this.state.info.surv_suicides}</td></tr>
+					<tr><th>Total teamkills:</th><td> {this.state.info.surv_teamkills}</td></tr>
+					<tr><th>Minimum alive time:</th><td> {this.state.info.surv_min_alive_time}</td></tr>
+					<tr><th>Rounds Won:</th><td> {this.state.info.surv_rounds_won} (0.0%)</td></tr>
+					<tr><th>Most damage taken:</th><td> {this.state.info.surv_most_damage_taken}</td></tr>
+					<tr><th>Most damage dealt:</th><td> {this.state.info.surv_most_damage_dealt}</td></tr>
+					<tr><th>Total hunters shoved:</th><td> {this.state.info.surv_hunters_shoved}</td></tr>
+				</table>
 			</div>
 		);
 	}

@@ -35,9 +35,15 @@ module.exports.routes = {
 	'/': 'MainController.main',
 	'/achievements': 'AchievementController.main',
 	'/stats': 'StatsController.main',
+
 	'get /player/:id':{
 		controller: 'PlayerController',
 		action: 'view'
+	},
+
+	'get /getPlayerRanking/:page':{
+		controller: 'PlayerController',
+		action: 'getPlayerRanking'
 	},
 
 	'get /getPlayer/:id':{
@@ -58,6 +64,21 @@ module.exports.routes = {
 	'get /getInfStats/:id':{
 		controller: 'PlayerController',
 		action: 'getInfStats'
+	},
+
+	'get /getTop10':{
+		controller: 'MainController',
+		action: 'getTop10'
+	},
+
+	'get /listen/hiserver':{
+		controller: 'MainController',
+		action: 'listenToHI'
+	},
+
+	'post /player/search':{
+		controller: 'PlayerController',
+		action: 'doSearch'
 	}
 
 	

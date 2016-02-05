@@ -1,29 +1,141 @@
-.intro-section{
-	padding-top: 80px;
-	margin-bottom: 20px;
-	height: 300px;
-	background-color: #BA3434;
-	color: white;
-	background-image: url("../images/invert.jpg");
+//Color definitions
+$background-color: #000000;
+$navbar-background-color: #B43434;
+$navbar-text-color: white; 
+$button-color: #BA3434;
+$button-text-color: #ffffff;
+
+
+//Panel
+$panel-primary-color: #646464;
+$panel-secondary-color: #BFBDBD;
+$panel-border-color: #C6C6C6;
+$panel-opacity-p: 50;
+
+$info-color: #ffffff;
+$footer-background-color: #303030;
+$footer-color: white;
+
+body {
+	//Properties
+	//Set fixed background image
+	background: url("../images/background.jpg") no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-color: $background-color;
+
+	.btn-primary{
+		background-color: $button-color;
+		border-color: $button-color;
+	}
+
+	.panel.panel-default{
+		border-color: $panel-border-color;
+		.panel-heading{
+			color: white;
+			background-color: $panel-primary-color;
+			border-color: $panel-border-color;
+			h3 {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+		}
+		.panel-body{
+			color: white;
+			background-color: $panel-secondary-color;
+			border-color: $panel-border-color;
+		}
+		.panel-footer{
+			background-color: $panel-secondary-color;
+			border-color: $panel-border-color;
+		}
+	}
+
+	//Children
+	.navbar.navbar-inverse{
+
+		//Navbar properties
+		background-color: $navbar-background-color;
+		font-size: 16px;
+		border-bottom: none;
+		margin-bottom: 0px;
+		border-radius: 0px;
+		.navbar-nav
+		{
+			> li
+			{
+				text-weight: bold;
+				> a {
+					color: $navbar-text-color;
+					-webkit-transition-duration: 500ms;
+					-moz-transition-duration: 500ms;
+					-o-transition-duration: 500ms;
+					transition-duration: 500ms;
+				}
+				> a:hover{
+					-webkit-transition-duration: 500ms;
+					-moz-transition-duration: 500ms;
+					-o-transition-duration: 500ms;
+					transition-duration: 500ms;
+					color: $navbar-background-color;
+					background-color: $navbar-text-color;
+				}
+			}
+		}
+	}
+
+	.upper-transition{
+		height: 30px;
+	}
+
+	.lower-transition{
+		height: 30px;
+	}
+
+	#section-intro {
+
+		//Properties
+		padding-top: 30px;
+		height: 500px;
+		max-height: 500px;
+		background-color: $background-color;
+		color: white;
+
+		//Children
+		img {
+			width: 100%;
+		}
+	}
+
+	#section-server{
+		margin-top: 30px;
+	}
+
+	#section-info{
+		color: $info-color;
+		img {
+			width: 100%;
+		}
+	}
+
+	footer{
+		color: $footer-color;
+		background-color: $footer-background-color;
+		border-top: 1px solid black;
+	}
 }
 
-h3{
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
+//General sets
 
-.navbar{
-	margin-bottom: 0px;
-	border-radius: 0px;
-}
 
 .with-margin-top{
 	margin-top: 20px;
 }
 
-
-.player-stats-section{
-	height: 300px;
+.stats{
+	border-radius: 10px;
 }
 
 .what-is-header{
@@ -37,12 +149,126 @@ h3{
 }
 
 .win-rate{
+	margin-bottom: 50px;
 	.progress{
 		background-color: #128415;
 		height: 30px;
+		color: white;
+		font-weight: bold;
+		font-size: 20px;
+		vertical-align: middle;
 	}
 
 	.progress-bar{
 		background-color: #C43434;
+		font-weight: bold;
+		font-size: 20px;
+		vertical-align: middle;
+		line-height: normal;
 	}
+}
+
+.win-rate-label{
+	vertical-align:middle;
+	margin-top: 44px;
+	margin-bottom: 90px;
+	font-weight: bold;
+}
+
+.inline{
+	display: inline;
+}
+
+.chat{
+	margin-top: 10px;
+	.panel-body{
+		height:100px;
+		max-height: 100px;
+		overflow-y:scroll;
+		overflow-x:hidden;
+		word-wrap:break-word;
+	}
+	ul{
+		padding-left: 1px;
+	}
+	li{
+		list-style-type: none;
+	}
+}
+
+.infected{
+	&.player-dead{
+		background-color: #B56060;
+		color: gray;
+	}
+	&.player-dead:hover{
+		color:white;
+	}
+}
+
+.detective{
+	background-color: #0049C7;
+	color: white;
+	&.player-dead{
+		background-color: #6861AB;
+		color: gray;
+	}
+
+	&.player-dead:hover{
+		color:white;
+	}
+}
+.unknown{
+	&.player-dead{
+		color: gray;
+		background-color: darkgray;
+	}
+	&.player-dead:hover{
+		color:white;
+	}
+}
+
+.player-list .tr{
+	height: 10px;
+}
+
+.table {
+  table-layout:fixed;
+}
+
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats{
+	th{
+		text-align: center;
+	}
+}
+
+.game-info {
+
+	img{
+		margin-bottom: 10px;
+		height:165px;
+		width:165px;
+	}
+}
+
+.server-offline{
+	color: red;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.current-game{
+	min-height: 400px;
+}
+
+.join-btn{
+	height: 100px;
+	width: 150px;
+	font-size: 50px;
 }

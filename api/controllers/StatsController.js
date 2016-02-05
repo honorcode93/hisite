@@ -7,7 +7,45 @@
 
 module.exports = {
 	main: function(req, res){
-		return res.view("statistics.ejs");
+		Player.query("SELECT "+
+			"a.*,"+
+			"b.*,"+
+			"d.*,"+
+			"e.* ,"+
+			"f.*,"+
+			"g.*,"+
+			"h.*,"+
+			"q1.*,"+
+			"q2.*,"+
+			"q3.*,"+
+			"q4.*,"+
+			"q5.*,"+
+			"q6.*,"+
+			"q7.*,"+
+			"q8.*,"+
+			"q9.*,"+
+			"q10.*"+
+		"FROM "+
+			"(SELECT COUNT(*) as total_players, AVG(rounds_infected/rounds_played) as avg_infected_luck, AVG(rounds_detective/rounds_played) as avg_detective_luck FROM player) a,"+
+			"(SELECT AVG(karma) as avg_karma, COUNT(*) as active_players FROM player WHERE last_active > NOW() - INTERVAL 30 DAY AND rounds_played > 0) b,"+
+			"(SELECT AVG(c.amount) as avg_rounds_per_day FROM (SELECT COUNT(*) as amount, round_date FROM round WHERE round_date > CURDATE() - INTERVAL 30 DAY GROUP BY round_date) c) d,"+ 
+			"(SELECT AVG( CAST(round_start as TIME)-CAST(round_end as TIME)) as avg_round_duration FROM round WHERE round_end IS NOT NULL) e,"+
+			"(SELECT SUM(surv_kills) as total_infected_killed_by_surv, MAX(surv_kill_streak) as survivor_kill_streak FROM player_survivor_stats) f, "+
+			"(SELECT SUM(det_kills) as total_infected_killed_by_det, MAX(det_kill_streak) as detective_kill_streak FROM player_detective_stats) g,"+
+			"(SELECT SUM(inf_kills) as total_survivors_killed, MAX(inf_kill_streak) as infected_kill_streak FROM player_infected_stats) h,"+
+			"(SELECT AVG(infected_left) as avg_inf_left FROM round WHERE round_end IS NOT NULL AND winner_team = 'infected') q1,"+
+			"(SELECT AVG(survivors_left) as avg_surv_left FROM round WHERE round_end IS NOT NULL AND winner_team = 'survivor') q2,"+
+			"(SELECT AVG(kills) as avg_survivor_kills_per_round FROM round_player WHERE role = 'survivor' OR role = 'detective') q3,"+
+			"(SELECT AVG(kills) as avg_infected_kills_per_round FROM round_player WHERE role = 'infected') q4,"+
+			"(SELECT COUNT(*) as infected_victory FROM round WHERE winner_team = 'infected' AND round_end IS NOT NULL) q5,"+
+			"(SELECT COUNT(*) as survivor_victory FROM round WHERE winner_team = 'survivor' AND round_end IS NOT NULL) q6,"+
+			"(SELECT COUNT(*) as infected_victory_month FROM round WHERE winner_team = 'infected' AND round_end IS NOT NULL AND round_date > CURDATE() - INTERVAL 30 DAY) q7,"+
+			"(SELECT COUNT(*) as survivor_victory_month FROM round WHERE winner_team = 'survivor' AND round_end IS NOT NULL AND round_date > CURDATE() - INTERVAL 30 DAY) q8,"+
+			"(SELECT COUNT(*) as infected_victory_3month FROM round WHERE winner_team = 'infected' AND round_end IS NOT NULL AND round_date > CURDATE() - INTERVAL 90 DAY) q9,"+
+			"(SELECT COUNT(*) as survivor_victory_3month FROM round WHERE winner_team = 'survivor' AND round_end IS NOT NULL AND round_date > CURDATE() - INTERVAL 90 DAY) q10", function(err, data){
+				console.log(err);
+			return res.view("statistics.ejs", {stats: data[0], error: false});
+		});
 	}
 };
 

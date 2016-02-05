@@ -7,163 +7,168 @@ function commaSeparateNumber(val){
 }
 
 %>
-
-<div class="intro-section">
-	<div class="container">
-		<h1 class="text-center"> Hidden Infected </h1>
-		<h4 class="text-center"> Where trust gets you killed</h4>
-	</div>
+<div class="upper-transition">
 </div>
-<div class="container">
-<div class="row">
-	<div class="col-md-5">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="">Leaderboards</h3>
+<div id="section-intro">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<h1 class="text-center">Hidden Infected</h1>
+				<h4 class="text-center">Where trust gets you killed</h4>
 			</div>
-			<div class="panel-body">
-				<table class="table table-condensed">
-					<thead>
-						<tr>
-							<th class="text-center">Rank</th>
-							<th class="text-center">Name</th>
-							<th class="text-center">Points</th>
-						</tr>
-					</thead>
-					<tbody class="text-center">
-						<% var i = 1 %>
-						<% playerList.forEach(function(player) {%>
-						<tr>
-							<td><%= i %></td>
-							<% i++ %>
-							<td><a href="/player/<%= player.steam_id %>"> <%= player.last_name %> </a></td>
-							<td><%= commaSeparateNumber(player.points) %></td>
-							</tr>
-						<% }); %>
-					</tbody>
-				</table> 
-			</div>
-			<div class="panel-footer">
-				<button type="button" class="btn btn-primary btn-lg btn-block">Got to statistics</button>
+			<div class="col-md-8">
+				<img class="home-image" src="/images/hiweb_opt1.jpg"/>
 			</div>
 		</div>
 		
 	</div>
-	<div class="col-md-7">
-		<h3>
-			Current game
-		</h3>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					Chat
-				</h3>
-			</div>
-			<div class="panel-body">
-				(10:30:25) Azure : le lool <br>
-				(10:30:54) HonorCode : KOS riv <br>
-			</div>
-		</div> 
-		<button type="button" class="btn btn-primary btn-default pull-right">
-			Connect
-		</button>
-	</div>
 </div>
+<div class="bottom-transition">
 </div>
+
+<div id="section-server">
 <div class="container">
-<div class="row">
-	<div class="col-md-12">
-		<h1 class="what-is-header">What is hidden infected? </h1>
-		<p class="what-is-body">
-			Hidden Infected is a port of the <b>Trouble In Terrorist</b> mod from the game <b>Garry's mod</b>. The mod takes place on a fortress built by survivors that is able to keep the Infected away and allow them to live peacefully for the years to come. <br><br>
+	<div class="row">
+		<div class="col-md-5">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>Leaderboards</h3>
+				</div>
+				<div id="homepage-player-ranking" class="panel-body">
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="text-center">Rank</th>
+								<th class="text-center">Name</th>
+								<th class="text-center">Points</th>
+							</tr>
+						</thead>
+						<tbody class="text-center">
+						</tbody>
+					</table> 
+				</div>
+				<div class="panel-footer">
+					<a href="/stats"><button type="button" class="btn btn-primary btn-lg btn-block">Got to statistics</button></a>
+				</div>
+			</div>
+			
+		</div>
+		<div class="col-md-7" id="current-game-bind">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3>Current Game</h3></div>
+				<div id="homepage-current-game" class="panel-body">
+				</div>
+		</div>
+	</div>
+</div>
+</div>
 
-			The Infected, however, have managed to infiltrate the fortress and disguise as a normal human to deveice the survivors. With their lies and silent murders, the Infected must kill each one of the humans that live in the fortress.
-			<br> <br>
+<div id="section-info">
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="what-is-header">What is hidden infected? </h1>
+			<p class="what-is-body">
+				Hidden Infected is a port of the famous game mode called <b>Trouble In Terrorist Town</b> from the <b>Garry's mod</b> game. It takes place in enclosed fortresses built by survivors where the infected can't get in by force. There is enough food and supplies for the survivors inside and they have finally managed to carry on with their lives in peace... <b>or that is what they thought!</b> <br><br>
 
-			Will the survivors be able to find out who is Infected before it is too late? <br><br>
-		</p>
-</div>
-<div class="row">
-	<div class="home-explanation">
-		<div class="col-md-4">
-			<img src="http://lorempixel.com/400/200" />
-		</div>
-		<div class="col-md-8">
-			<h2>Distrust and confusion</h2>
-			<p>Trust nobody. Not even your best friend! The Infected are inside and will use the cheapest trick to cut you into pieces!</p>
+				The Infected have developed a way to disguise as survivors and enter the fortress completely unnoticed. They will gain the trust of the survivors and silently torture and murder them later. <br> <br>
+
+				Who can you trust in this place full of despair and distrust? Will the survivors be able to find out who is infected before it is too late? Will the infected feast on the survivors juicy meat? <br><br>
+			</p>
 		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="home-explanation">
-		<div class="col-md-8">
-			<h2>Strategy</h2>
-			<p>As Infected plan a way to murder silently and to be as sneeky as possible. There's too many of them and together they can bring you down in seconds!</p>
-		</div>
-		<div class="col-md-4">
-			<img src="http://lorempixel.com/400/200" />
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="home-explanation">
-		<div class="col-md-4">
-			<img src="http://lorempixel.com/400/200" />
-		</div>
-		<div class="col-md-8">
-			<h2>Fun!</h2>
-			<p>Come join us in one of the funniest mods available for L4D2. Don't be shy and bring a microphone to have a great time with us! We are all friendly and ready to help people willing to learn how to play!</p>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		<div class="row">
+	<div class="row">
+		<div class="home-explanation">
 			<div class="col-md-4">
-				<div class="thumbnail">
-					<img alt="Bootstrap Thumbnail First" src="http://lorempixel.com/output/people-q-c-600-200-1.jpg">
-					<div class="caption">
-						<h3>Learn about the mod</h3>
-						<p>
-							Learn the basic aspects of the mod to get you started on your attempts to survive... or murder...
-						</p>
-						<p>
-							<a class="btn btn-default" href="#">Full Guide</a> <a class="btn btn-primary" href="#">Video</a>
-						</p>
+				<img src="http://lorempixel.com/400/200" />
+			</div>
+			<div class="col-md-8">
+				<h2>Distrust and confusion</h2>
+				<p>Trust nobody. Not even your best friend! The Infected are inside and will use the cheapest tricks to cut you into pieces!</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="home-explanation">
+			<div class="col-md-8">
+				<h2>Strategy</h2>
+				<p>Infected are outnumbered! Commiting murder out in the open will guarantee your rapid and useless death. Plan a strategy with your fellow infected comrades and do your best to act as a scared survivor</p>
+			</div>
+			<div class="col-md-4">
+				<img src="http://lorempixel.com/400/200" />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="home-explanation">
+			<div class="col-md-4">
+				<img src="http://lorempixel.com/400/200" />
+			</div>
+			<div class="col-md-8">
+				<h2>Fun!</h2>
+				<p>Come join us in one of the funniest mods available for L4D2. Don't be shy and bring a microphone to have a great time with us! We are all friendly and ready to help people <b>willing to learn</b> how to play!</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 mod-to-dos">
+			<h1 class="what-is-header">Are you ready to play?</h1>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="thumbnail">
+						<img alt="Bootstrap Thumbnail First" src="http://lorempixel.com/output/people-q-c-600-200-1.jpg">
+						<div class="caption">
+							<h3>Learn about it</h3>
+							<p>
+								Learn the basic aspects of the mod to get you started on your attempts to survive... or murder.<br><br>
+
+								You can either watch a tutorial video we have made for you, or read the guide for a more detailed explanation.
+							</p>
+							<p>
+								<a class="btn btn-default" href="#">Full Guide</a> <a class="btn btn-primary" href="#">Video</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="thumbnail">
+						<img alt="Bootstrap Thumbnail Second" src="http://lorempixel.com/output/city-q-c-600-200-1.jpg">
+						<div class="caption">
+							<h3>
+								Read the rules
+							</h3>
+							<p>
+								Read the rules that make the mod as fun as it is! Breaking these rules may get you expelled from our servers, so it is always good to give them a deep read to keep yourself informed.
+							</p>
+							<p>
+								<a class="btn btn-default" href="#">Full Guide</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="thumbnail">
+						<img alt="Bootstrap Thumbnail Third" src="http://lorempixel.com/output/sports-q-c-600-200-1.jpg">
+						<div class="caption">
+							<h3>
+								Learn about items
+							</h3>
+							<p>
+								Learn about the special equipment that certain roles have access to. After this,	 you will know when and how to use each of the items to destroy your enemies!
+							</p>
+							<p>
+								<a class="btn btn-default" href="#">Full Guide</a>
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="thumbnail">
-					<img alt="Bootstrap Thumbnail Second" src="http://lorempixel.com/output/city-q-c-600-200-1.jpg">
-					<div class="caption">
-						<h3>
-							Read the rules of the mod
-						</h3>
-						<p>
-							Read the rules that make the mod as fun as it is! Breaking these rules may get you expelled from our servers, so it is always good to give them a deep read to keep yourself informed.
-						</p>
-						<p>
-							<a class="btn btn-default" href="#">Full Guide</a>
-						</p>
-					</div>
+			<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<button class="btn center-block btn-primary btn-lg btn-block join-btn"><b>Join</b></button>
 				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="thumbnail">
-					<img alt="Bootstrap Thumbnail Third" src="http://lorempixel.com/output/sports-q-c-600-200-1.jpg">
-					<div class="caption">
-						<h3>
-							Learn more about items
-						</h3>
-						<p>
-							Learn about the special equipment that certain roles have access to. After this,	 you will know when and how to use each of the items to destroy your enemies!
-						</p>
-						<p>
-							<a class="btn btn-default" href="#">Full Guide</a>
-						</p>
-					</div>
-				</div>
+				<div class="col-md-4"></div>
 			</div>
 		</div>
 	</div>

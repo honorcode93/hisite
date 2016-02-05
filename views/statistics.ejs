@@ -1,175 +1,196 @@
+<%
+	var surv_win = (stats.survivor_victory)/(stats.infected_victory+stats.survivor_victory)*100.0;
+	var inf_win = (stats.infected_victory)/(stats.infected_victory+stats.survivor_victory)*100.0;
+
+	var surv_win_month = (stats.survivor_victory_month)/(stats.infected_victory_month+stats.survivor_victory_month)*100.0;
+	var inf_win_month = (stats.infected_victory_month)/(stats.infected_victory_month+stats.survivor_victory_month)*100.0;
+
+	var surv_win_3month = (stats.survivor_victory_3month)/(stats.infected_victory_3month+stats.survivor_victory_3month)*100.0;
+	var inf_win_3month = (stats.infected_victory_3month)/(stats.infected_victory_3month+stats.survivor_victory_3month)*100.0;
+
+	surv_win = Math.round(surv_win*10)/10;
+	inf_win = Math.round(inf_win*10)/10;
+	if(surv_win + inf_win > 100.0){
+		if(surv_win > inf_win){
+			inf_win -= surv_win-inf_win;
+		}
+		else{
+			surv_win -= inf_win-surv_win;
+		}
+	}	
+
+	surv_win_month = Math.round(surv_win_month*10)/10;
+	inf_win_month = Math.round(inf_win_month*10)/10;
+	if(surv_win_month + inf_win_month > 100.0){
+		if(surv_win_month > inf_win_month){
+			inf_win_month -= surv_win_month-inf_win_month;
+		}
+		else{
+			surv_win_month -= inf_win_month-surv_win_month;
+		}
+	}
+
+	surv_win_3month = Math.round(surv_win_3month*10)/10;
+	inf_win_3month = Math.round(inf_win_3month*10)/10;
+	if(surv_win_3month + inf_win_3month > 100.0){
+		if(surv_win_3month > inf_win_3month){
+			inf_win_3month -= surv_win_3month-inf_win_3month;
+		}
+		else{
+			surv_win_3month -= inf_win_3month-surv_win_3month;
+		}
+	}
+
+	var active_percent = Math.round((stats.active_players/stats.total_players*100.0)*10)/10;
+
+	var mins = Math.floor(stats.avg_round_duration/60)
+	var secs = Math.floor(stats.avg_round_duration - mins*60);
+
+	if(mins < 10)
+		mins = "0"+mins.toString();
+	else
+		mins = mins.toString();
+
+	if(secs < 10)
+		secs = "0"+secs.toString();
+	else
+		secs = secs.toString();
+	var avg_time = mins+" minutes "+secs+" seconds";
+%>
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="page-header">
-				<h1>
+				<h2>
 					Global Statistics
-				</h1>
+				</h2>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-3">
-		</div>
-		<div class="col-md-6">
-			<div class="win-rate text-center" style="height: 200px;">
-				<div class="progress">
-					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-					</div>
-				</div>
-				Infected v/s Survivor<br>
-				Winrate
-			</div>
-		</div>
-		<div class="col-md-3">
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<form role="form">
-				<div class="form-group form-inline">
-					 
-					<label for="searchForPlayer">
-						Search for a player
-					</label>
-					<input type="text" class="form-control" id="searchForPlayer" />
-					<button type="submit" class="btn btn-default">
-						Find
-					</button>
-				</div>				
-			</form>
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						<b>Player Ranking</b>
+						<b>Statistics</b>
 					</h3>
 				</div>
 				<div class="panel-body">
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th>
-									#
-								</th>
-								<th>
-									Product
-								</th>
-								<th>
-									Payment Taken
-								</th>
-								<th>
-									Status
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									1
-								</td>
-								<td>
-									TB - Monthly
-								</td>
-								<td>
-									01/04/2012
-								</td>
-								<td>
-									Default
-								</td>
-							</tr>
-							<tr class="active">
-								<td>
-									1
-								</td>
-								<td>
-									TB - Monthly
-								</td>
-								<td>
-									01/04/2012
-								</td>
-								<td>
-									Approved
-								</td>
-							</tr>
-							<tr class="success">
-								<td>
-									2
-								</td>
-								<td>
-									TB - Monthly
-								</td>
-								<td>
-									02/04/2012
-								</td>
-								<td>
-									Declined
-								</td>
-							</tr>
-							<tr class="warning">
-								<td>
-									3
-								</td>
-								<td>
-									TB - Monthly
-								</td>
-								<td>
-									03/04/2012
-								</td>
-								<td>
-									Pending
-								</td>
-							</tr>
-							<tr class="danger">
-								<td>
-									4
-								</td>
-								<td>
-									TB - Monthly
-								</td>
-								<td>
-									04/04/2012
-								</td>
-								<td>
-									Call in to confirm
-								</td>
-							</tr>
-						</tbody>
+					<table class="table table-stripped stats text-center">
+					<tbody>
+						<tr>
+							<th>Total active players:</th>
+							<td><%= stats.active_players%> of <%= stats.total_players%> total (<%= active_percent%>%)</td>					
+						</tr>
+						<tr>
+							<th>Average karma (of active players)</th>
+							<td><%= Math.floor(stats.avg_karma) %></td>
+						</tr>
+						<tr>
+							<th>Average rounds played per day (last 30 days):</th>
+							<td><%=Math.floor(stats.avg_rounds_per_day) %> per day</td>
+						</tr>
+						<tr>
+							<th>Total survivors killed:</th>
+							<td><%= stats.total_survivors_killed+0 %> in total</td>
+						</tr>
+							<th>Total infected players killed:</th>
+							<td><%= stats.total_infected_killed_by_surv + stats.total_infected_killed_by_det %> in total</td>
+						<tr>
+						<tr>
+							<th>Average round duration</th>
+							<td><%= avg_time %></td>
+						</tr>
+						<tr>
+							<th>Average alive survivors on victory</th>
+							<td><%= stats.avg_inf_left+0 %> when survivors win</td>
+						</tr>
+						<tr>
+							<th>Average alive infected on victory</th>
+							<td><%= stats.avg_surv_left+0 %> when infected win</td>
+						</tr>
+						<tr>
+							<th>Highest survivor kill streak</th>
+							<td><%= stats.survivor_kill_streak+0 %> infected killed on a single round</td>
+						</tr>
+						<tr>
+							<th>Highest infected kill streak</th>
+							<td><%= stats.infected_kill_streak+0 %> survivors killed on a single round</td>
+						</tr>
+						<tr>
+							<th>Average survivor kills per round</th>
+							<td>Each survivor kills <%= stats.avg_survivor_kills_per_round+0 %> infected in average</td>
+						</tr>
+						<tr>
+							<th>Average infected kills per round</th>
+							<td>Each Infected kills <%= stats.infected_kill_streak+0 %> survivor(s) in average</td>
+						</tr>
+						<tr>
+							<th>Average infected luck (all players)</th>
+							<td><%= Math.round(stats.avg_infected_luck*1000)/10%>%</td>
+						</tr>
+						<tr>
+							<th>Average detective luck (all players)</th>
+							<td><%= Math.round(stats.avg_detective_luck*1000)/10%>%</td>
+						</tr>
+					</tbody>
 					</table>
-				</div>
-				<div class="panel-footer">
-					<div class="row">
-						<div class="col-md-4">
-						</div>
-						<div class="col-md-4">
-							<ul class="pagination">
-								<li class="disabled">
-									<a href="#">Prev</a>
-								</li>
-								<li class="active">
-									<a href="#">1</a>
-								</li>
-								<li>
-									<a href="#">2</a>
-								</li>
-								<li>
-									<a href="#">3</a>
-								</li>
-								<li>
-									<a href="#">4</a>
-								</li>
-								<li>
-									<a href="#">5</a>
-								</li>
-								<li>
-									<a href="#">Next</a>
-								</li>
-							</ul>
-						</div>
-						<div class="col-md-4">
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
+		<div class="col-md-1"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<p class="text-right win-rate-label">Infected</p>
+			<p class="text-right win-rate-label">Infected</p>
+			<p class="text-right win-rate-label">Infected</p>
+		</div>
+		<div class="col-md-6">
+			<h4 class="text-center"><b>Win Rate (All time)</b></h4>
+			<div class="win-rate text-center">
+				<div class="progress">
+					<%= inf_win %>%
+					<div class="progress-bar" role="progressbar" aria-valuenow="<%= surv_win %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= surv_win %>%;">
+					<%= surv_win %>%
+					</div>
+
+				</div>
+			</div>
+			<h4 class="text-center"><b>Win Rate (Past 3 months)</b></h4>
+			<div class="win-rate text-center">
+				<div class="progress">
+					<%= inf_win_3month %>%
+					<div class="progress-bar" role="progressbar" aria-valuenow="<%= surv_win_3month %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= surv_win_3month %>%;">
+					<%= surv_win_3month %>%
+					</div>
+
+				</div>
+			</div>	<h4 class="text-center"><b>Win Rate (Past 30 days)</b></h4>
+
+			<div class="win-rate text-center">
+				<div class="progress">
+					<%= inf_win_month %>%
+					<div class="progress-bar" role="progressbar" aria-valuenow="<%= surv_win_month %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= surv_win_month %>%;">
+					<%= surv_win_month %>%
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<p class="text-left win-rate-label">Survivor</p>
+			<p class="text-left win-rate-label">Survivor</p>
+			<p class="text-left win-rate-label">Survivor</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+			<div class="panel panel-default" id="stats-ranking">
+			</div>
+		</div>
+		<div class="col-md-1"></div>
 	</div>
 </div>

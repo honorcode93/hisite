@@ -1,0 +1,11 @@
+SELECT 
+	rank,
+	last_name,
+	steam_id,
+	points,
+	karma,
+	last_active
+
+FROM 
+	(select @rownum:=@rownum+1 'rank', p.* from player p, (SELECT @rownum:=0) r order by points desc) v 
+WHERE last_name LIKE "honor%";
